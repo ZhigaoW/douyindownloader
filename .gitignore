@@ -1,0 +1,13 @@
+# Local runtime data and personal files
+/downloads/*
+!/downloads/.gitkeep
+/local/*
+!/local/.gitkeep
+
+# Build outputs
+/bin/
+/dist/
+
+# Editor / OS files
+.DS_Store
+*.log

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="本地运行的抖音视频下载工具" />
+    <title>抖音视频下载器</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <main class="shell">
+      <header class="hero">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M28 8v21.5a9.5 9.5 0 1 1-7-9.18V26a4.5 4.5 0 1 0 2 3.74V8h5Zm0 0c1.5 5.2 5.2 8.3 10 8.8v5.4c-4.1-.2-7.5-1.7-10-4.1V8Z"/></svg>
+        </div>
+        <div>
+          <p class="eyebrow">LOCAL VIDEO TOOL</p>
+          <h1>抖音视频下载器</h1>
+          <p class="subtitle">粘贴分享文案，保存清晰原视频。全部处理都在你的电脑上完成。</p>
+        </div>
+        <span id="statusPill" class="status-pill"><i></i><span>正在检查</span></span>
+      </header>
+
+      <section class="card download-card">
+        <form id="downloadForm">
+          <label for="shareText" class="field-label">分享链接或完整文案</label>
+          <div class="input-wrap">
+            <textarea id="shareText" rows="5" autocomplete="off" placeholder="例如：https://v.douyin.com/xxxxxxxx/" required></textarea>
+            <button type="button" id="pasteButton" class="paste-button" title="粘贴剪贴板内容">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5h6m-6 0a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m-8 0H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1"/></svg>
+              粘贴
+            </button>
+          </div>
+
+          <button id="downloadButton" class="primary-button" type="submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14"/></svg>
+            <span>解析并下载</span>
+          </button>
+        </form>
+
+        <div id="progressPanel" class="progress-panel" hidden>
+          <div class="progress-heading">
+            <div>
+              <span id="progressTitle">正在解析视频</span>
+              <small id="progressMeta">请稍候…</small>
+            </div>
+            <strong id="progressPercent">0%</strong>
+          </div>
+          <div class="progress-track"><div id="progressBar"></div></div>
+          <p id="progressMessage" class="progress-message">正在连接抖音…</p>
+        </div>
+
+        <div id="resultPanel" class="result-panel" hidden>
+          <div class="result-icon">
+            <svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>
+          </div>
+          <div class="result-copy">
+            <strong>下载完成</strong>
+            <span id="resultFilename"></span>
+          </div>
+          <a id="saveButton" class="save-button" href="#" download>保存到电脑</a>
+        </div>
+
+        <div id="errorPanel" class="error-panel" hidden>
+          <strong>没有下载成功</strong>
+          <p id="errorMessage"></p>
+        </div>
+      </section>
+
+      <section class="history-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">RECENT</p>
+            <h2>最近下载</h2>
+          </div>
+          <button id="refreshButton" class="text-button" type="button">刷新</button>
+        </div>
+        <div id="downloadList" class="download-list">
+          <div class="empty-state">下载完成的视频会出现在这里</div>
+        </div>
+      </section>
+
+      <footer>仅用于下载你有权保存的内容，请尊重作者版权与平台规则。</footer>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
