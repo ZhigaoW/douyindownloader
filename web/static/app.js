@@ -32,7 +32,7 @@ function formatBytes(bytes) {
 function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
-  return div.innerHTML;
+  return div.innerHTML.replaceAll('"', '&quot;');
 }
 
 async function checkHealth() {
@@ -52,7 +52,7 @@ async function loadDownloads() {
     const response = await fetch('/api/downloads');
     const data = await response.json();
     if (!data.files?.length) {
-      downloadList.innerHTML = '<div class="empty-state">下载完成的视频会出现在这里</div>';
+      downloadList.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM4 14h5l1 3h4l1-3h5M12 7v5m-2-2 2 2 2-2"/></svg><strong>还没有下载记录</strong><p>从一个喜欢的视频开始吧。</p></div>`;
       return;
     }
     downloadList.innerHTML = data.files.slice(0, 8).map((file) => `
@@ -75,6 +75,7 @@ function resetPanels() {
   resultPanel.hidden = true;
   errorPanel.hidden = true;
   progressBar.style.width = '3%';
+  progressBar.parentElement.removeAttribute('aria-valuenow');
   progressPercent.textContent = '0%';
   document.querySelector('#progressTitle').textContent = '正在解析视频';
   progressMeta.textContent = '请稍候…';
@@ -98,6 +99,7 @@ function handleEvent(event) {
     if (Number.isFinite(numeric)) {
       progressBar.style.width = `${Math.max(3, Math.min(100, numeric))}%`;
       progressPercent.textContent = `${numeric.toFixed(1)}%`;
+      progressBar.parentElement.setAttribute('aria-valuenow', String(Math.max(0, Math.min(100, numeric))));
     }
     progressMeta.textContent = [event.speed, event.eta && `剩余 ${event.eta}`].filter(Boolean).join(' · ') || '正在下载';
     progressMessage.textContent = '视频数据正在保存到本机…';
@@ -105,6 +107,7 @@ function handleEvent(event) {
     progressMessage.textContent = event.message;
   } else if (event.type === 'complete') {
     progressBar.style.width = '100%';
+    progressBar.parentElement.setAttribute('aria-valuenow', '100');
     progressPercent.textContent = '100%';
     progressPanel.hidden = true;
     resultPanel.hidden = false;
@@ -172,6 +175,25 @@ pasteButton.addEventListener('click', async () => {
   }
 });
 
+const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
+document.querySelector('#shortcutHint').textContent = isMac ? '⌘ ↵' : 'Ctrl ↵';
+shareText.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' && (event.metaKey || event.ctrlKey) && !event.isComposing) {
+    event.preventDefault();
+    if (!downloadButton.disabled) form.requestSubmit();
+  }
+});
+function updateNavigation() {
+  const current = location.hash === '#history' ? '#history' : '#new-download';
+  document.querySelectorAll('.nav-item').forEach((link) => {
+    const active = link.getAttribute('href') === current;
+    link.classList.toggle('active', active);
+    if (active) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  });
+}
+window.addEventListener('hashchange', updateNavigation);
+updateNavigation();
 refreshButton.addEventListener('click', loadDownloads);
 checkHealth();
 loadDownloads();
