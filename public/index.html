@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="本地运行的抖音、哔哩哔哩视频下载工具" />
+    <meta name="theme-color" content="#f5f5f5" />
+    <title>视频下载器 · 抖音 / 哔哩哔哩</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="header-inner">
+        <a class="brand" href="#download" aria-label="视频下载器">
+          <span class="brand-tile" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 20h14" /></svg>
+          </span>
+          <span class="brand-name">视频下载器</span>
+        </a>
+
+        <nav class="header-nav" aria-label="主导航">
+          <a href="#download" data-nav="download" class="is-active">解析下载</a>
+          <a href="#history" data-nav="history">最近下载</a>
+          <a href="#support" data-nav="support">支持平台</a>
+        </nav>
+
+        <div class="header-meta">
+          <span id="statusPill" class="status-pill" role="status"><i></i><span>正在检查</span></span>
+          <span id="versionTag" class="version-tag">v2.2.0</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-frame">
+      <aside class="side-nav" aria-label="页面导航">
+        <p class="side-label">开始使用</p>
+        <nav class="side-links">
+          <a href="#download" data-nav="download" class="is-active">解析视频</a>
+          <a href="#history" data-nav="history">最近下载</a>
+          <a href="#support" data-nav="support">支持平台</a>
+        </nav>
+
+        <div class="side-divider"></div>
+
+        <p class="side-label">本地处理</p>
+        <p class="side-note">所有解析与下载都在本机完成，链接不会上传到第三方服务。</p>
+
+        <div class="side-bottom">
+          <button class="button button-secondary button-block" type="button" data-action="open-folder">打开下载文件夹</button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section id="download" class="content-section">
+          <div class="page-heading">
+            <p class="kicker">VIDEO DOWNLOADER</p>
+            <h1>解析并下载视频</h1>
+            <p class="lede">粘贴抖音或哔哩哔哩的分享链接，解析视频信息后选择清晰度保存到本机。</p>
+            <div class="platform-row">
+              <span class="platform-chip" data-platform="douyin">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v10.5a4.5 4.5 0 1 1-3.4-4.36V12a2 2 0 1 0 1.4 1.9V3h2Zm0 0c.8 2.7 2.7 4.3 5 4.6v2.6c-2-.1-3.7-.8-5-2V3Z" /></svg>
+                抖音
+              </span>
+              <span class="platform-chip" data-platform="bilibili">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4 4.5 1M16.5 4l3-3M4 6.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z" /><path d="M8 11v2m8-2v2" /></svg>
+                哔哩哔哩
+              </span>
+              <span class="platform-row-note">自动识别链接</span>
+            </div>
+          </div>
+
+          <div class="rule rule-accent"></div>
+
+          <div class="download-card" id="downloadCard">
+            <form id="downloadForm">
+              <div class="field-head">
+                <label for="shareText" class="field-label">分享链接或完整文案 <span class="required">*</span></label>
+                <button type="button" id="pasteButton" class="button button-tertiary button-sm">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5h6m-6 0a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m-8 0H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1" /></svg>
+                  粘贴
+                </button>
+              </div>
+
+              <textarea
+                id="shareText"
+                rows="5"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="例如：&#10;https://www.bilibili.com/video/BV1qRGHzuEUv/&#10;或 https://v.douyin.com/xxxxxx/"
+                required
+              ></textarea>
+
+              <p id="detectHint" class="detect-hint"><i></i><span>支持抖音、哔哩哔哩分享链接或整段文案</span></p>
+
+              <div id="previewPanel" class="preview-panel" hidden>
+                <div class="preview-cover">
+                  <img id="previewCover" alt="视频封面" hidden />
+                  <div id="previewCoverFallback" class="cover-placeholder" hidden>视频</div>
+                  <span id="platformTag" class="platform-tag">视频</span>
+                </div>
+                <div class="preview-body">
+                  <h2 id="previewTitle" class="preview-title"></h2>
+                  <p class="preview-meta">
+                    <span id="previewAuthor"></span>
+                    <span id="previewDuration"></span>
+                    <span id="previewStats"></span>
+                  </p>
+                  <p id="previewDesc" class="preview-desc" hidden></p>
+                  <div class="preview-controls">
+                    <label id="pageField" class="select-field" hidden>
+                      <span>分 P</span>
+                      <select id="pageSelect"></select>
+                    </label>
+                    <label class="select-field">
+                      <span>清晰度</span>
+                      <select id="qualitySelect"></select>
+                    </label>
+                  </div>
+                </div>
+                <p id="previewNote" class="preview-note" hidden></p>
+              </div>
+
+              <div class="form-actions">
+                <button id="downloadButton" class="button button-primary" type="submit">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>
+                  <span>解析视频</span>
+                </button>
+              </div>
+            </form>
+
+            <div id="progressPanel" class="progress-panel" hidden>
+              <div class="progress-heading">
+                <div class="progress-copy">
+                  <span id="progressTitle">正在解析视频</span>
+                  <small id="progressMeta">请稍候…</small>
+                </div>
+                <div class="progress-side">
+                  <strong id="progressPercent">0%</strong>
+                  <button id="cancelButton" class="button button-tertiary button-sm" type="button" hidden>取消</button>
+                </div>
+              </div>
+              <div class="progress-track"><div id="progressBar"></div></div>
+              <p id="progressMessage" class="progress-message" aria-live="polite">正在连接…</p>
+            </div>
+
+            <div id="resultPanel" class="result-panel" hidden>
+              <div class="result-icon">
+                <svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></svg>
+              </div>
+              <div class="result-copy">
+                <strong>下载完成</strong>
+                <span id="resultFilename"></span>
+                <small id="resultMeta"></small>
+              </div>
+              <div class="result-actions">
+                <a id="saveButton" class="button button-primary button-sm" href="#" download>保存到电脑</a>
+                <button class="button button-secondary button-sm" type="button" data-action="open-folder">打开文件夹</button>
+              </div>
+            </div>
+
+            <div id="errorPanel" class="error-panel" hidden>
+              <strong>没有下载成功</strong>
+              <p id="errorMessage"></p>
+            </div>
+          </div>
+        </section>
+
+        <section id="history" class="content-section">
+          <div class="section-heading">
+            <div>
+              <p class="kicker">RECENT</p>
+              <h2>最近下载</h2>
+            </div>
+            <div class="section-actions">
+              <button class="text-button" type="button" data-action="open-folder">打开文件夹</button>
+              <button id="refreshButton" class="text-button" type="button">刷新</button>
+            </div>
+          </div>
+          <div class="rule"></div>
+          <div id="downloadList" class="download-list">
+            <div class="empty-state">下载完成的视频会出现在这里</div>
+          </div>
+        </section>
+
+        <section id="support" class="content-section">
+          <div class="section-heading">
+            <div>
+              <p class="kicker">PLATFORMS</p>
+              <h2>支持平台</h2>
+            </div>
+          </div>
+          <div class="rule"></div>
+          <div class="platform-cards">
+            <article class="platform-card">
+              <div class="platform-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M14 3v10.5a4.5 4.5 0 1 1-3.4-4.36V12a2 2 0 1 0 1.4 1.9V3h2Zm0 0c.8 2.7 2.7 4.3 5 4.6v2.6c-2-.1-3.7-.8-5-2V3Z" /></svg>
+              </div>
+              <div class="platform-card-body">
+                <h3>抖音</h3>
+                <p>支持公开视频、v.douyin.com 短链接和整段分享文案。</p>
+                <p class="platform-card-note">图文、直播和私密作品暂不支持</p>
+              </div>
+            </article>
+            <article class="platform-card">
+              <div class="platform-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M7.5 4 4.5 1M16.5 4l3-3M4 6.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z" /><path d="M8 11v2m8-2v2" /></svg>
+              </div>
+              <div class="platform-card-body">
+                <h3>哔哩哔哩</h3>
+                <p>支持 BV / av、b23.tv 短链接、分 P 和清晰度选择。</p>
+                <p class="platform-card-note">未登录最高 720P；番剧、直播和付费内容暂不支持</p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <aside class="context-rail" aria-label="使用提示">
+        <div class="rail-block">
+          <h2>使用提示</h2>
+          <ul class="rail-list">
+            <li>B 站未登录最高 720P</li>
+            <li>支持分 P 与清晰度选择</li>
+            <li>中断后自动断点续传</li>
+          </ul>
+        </div>
+        <div class="rail-block">
+          <h2>本地运行</h2>
+          <p>链接与视频只在本机处理，不会上传到第三方，也不会读取浏览器 Cookie。</p>
+        </div>
+        <div class="rail-block">
+          <h2>相关</h2>
+          <a class="rail-link" href="https://ix.siemens.io/docs/home/overview" target="_blank" rel="noreferrer">
+            Siemens Industrial Experience<span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="app-footer">
+      <div class="footer-inner">
+        <p>仅用于下载你有权保存的内容，请尊重作者版权与平台规则。</p>
+        <p class="footer-meta">
+          视觉规范参考
+          <a href="https://ix.siemens.io/docs/home/overview" target="_blank" rel="noreferrer">Siemens Industrial Experience</a>
+        </p>
+      </div>
+    </footer>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

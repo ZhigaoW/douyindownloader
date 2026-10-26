@@ -1,13 +1,29 @@
-# Local runtime data and personal files
-/downloads/*
-!/downloads/.gitkeep
-/local/*
-!/local/.gitkeep
+# Download output: keep the folder, ignore generated media and temp files
+downloads/*
+!downloads/.gitkeep
+*.part
 
-# Build outputs
-/bin/
-/dist/
+# Portable Node.js runtime downloaded by the launchers
+.runtime/
+node_modules/
+.npm-cache/
 
-# Editor / OS files
-.DS_Store
+# Local logs and temporary files
 *.log
+*.tmp
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local environment files
+.env
+.env.*
+!.env.example

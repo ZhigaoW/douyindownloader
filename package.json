@@ -1,0 +1,14 @@
+{
+  "name": "video-downloader",
+  "version": "2.2.0",
+  "private": true,
+  "type": "module",
+  "description": "A local Douyin and Bilibili video downloader with a simple web interface.",
+  "scripts": {
+    "start": "node src/server.ts",
+    "check": "node --check src/server.ts && node --check src/douyin.ts && node --check src/bilibili.ts && node --check src/download.ts && node --check src/input.ts && node --check src/http.ts && node --check src/cover.ts && node --check src/types.ts && node --check public/app.js"
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  }
+}

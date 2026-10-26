@@ -1,2 +1,17 @@
-* text=auto eol=lf
+* text=auto
+
+# Windows launchers and PowerShell need CRLF
 *.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Unix launchers must keep LF
+*.sh text eol=lf
+*.command text eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
